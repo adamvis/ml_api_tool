@@ -11,6 +11,7 @@ from src.menu import *
 # Wrappers
 
 def not_implemented(func, *args, **kwargs):
+    """ Print not implemente image instead of running the function. """
     def func_wrapper(obj):
         print(" ------------------------------")
         print("| Feature not implemented yet! |")
@@ -19,6 +20,7 @@ def not_implemented(func, *args, **kwargs):
     return func_wrapper
 
 def log_error(func, *args, **kwargs):
+    """ Exit program as error appears, allowing to exit main loop and see tracebacks. """
     def func_wrapper(obj):
         try:
             func(obj)
@@ -29,6 +31,7 @@ def log_error(func, *args, **kwargs):
     return func_wrapper
 
 def warm_farewell(func, *args, **kwargs):
+    """ State if command has been executed correctly """
     def func_wrapper(obj):
         func(obj)
         print(f"{func.__name__} executed correctly!")
@@ -36,6 +39,7 @@ def warm_farewell(func, *args, **kwargs):
     return func_wrapper
 
 def click_off(attr=None):
+    """ Avoids exiting mainloop when clicking with mouse over the terminal """
     def decorator(func):
         def func_wrapper(obj):
             try:
@@ -57,15 +61,29 @@ class Main:
         self.intro()
 
     def intro(self):
+        """ Print introduction """
         f = Figlet(font='slant')
         print(f.renderText('ML-API Tool'))
         print("Hi, welcome to ML-API managing tool")
 
     def ask_model_name(self):
+        """ 
+        Asks for model name.
+        This name will be used to mount the directory build_<model_name> in the specified path.
+        """
         res = prompt(model_name_q, style=style)
         self.model_name = res["model_name"]
 
     def ask_paths(self):
+        """ 
+        Asks for:
+            - model directory (must contain):
+                - __init__.py: where object "Model" is located;
+                - requirements.txt: requirements to the model;
+                - hyperparmeters.json: dictionary containing model parameters in a way that can be passed to it as Model(**trainingParms)
+                - other scripts and dependecies of the model.
+            - build directory: where to locate the staffered directory for deploying.
+        """
         res = prompt(in_path_q, style=style)
         self.model_path = os.path.abspath(res["in_path"])
         res = prompt(out_path_q, style=style)  
@@ -73,53 +91,70 @@ class Main:
 
     @click_off(attr='usage')
     def ask_usage(self):        
+        """ Main Menu """
         res = prompt(main_menu, style=style)
         self.usage = res["usage"]
     
     @warm_farewell
     def build(self):
+        """ 
+        Launch src/{cloud_provider}/build.sh with:
+            -m : model path (asked after intro)
+            -b : build path (asked after intro)
+            -n : model name (asked after intro)
+        """
         system(f"sh {self.program_path}/src/aws/build.sh -m {self.model_path} -b {self.build_path} -n {self.model_name}")
 
     # @click_off()
     def test_menu(self):
+        """ Test menu """
         res = prompt(test_menu, style=style)
         return res["test"]
     
     # @click_off()
     def dm_menu(self):
+        """ Docker Manager menu """
         res = prompt(dm_menu, style=style)
         return res["dm"]
 
     def launch_image(self):
+        """ Build Docker image locally from build folder (defined after intro) """
         system(f"docker image build -t {app.model_name}_image {self.build_path}")
         system(f"docker container run --publish 8000:8080 --detach --name {app.model_name}_container {app.model_name}_image")
 
     @log_error
     def train(self):
+        """ Launch train on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/train_local.sh {app.model_name}_image {self.build_path}")
 
     @log_error
     def serve(self):
+        """ Launch serve on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/serve_local.sh {app.model_name}_image")
 
     @not_implemented
     def inference(self):
+        """ Launch predict.py on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/predict.sh")
     
     @not_implemented
     def deploy(self):
+        """ T.B.D. will allow cloud deploying """
         system(f"sh {self.program_path}/src/aws/test/train_local.sh")
 
     @not_implemented
     def mantain(self):
+        """ T.B.D. will allow testing production model performance and fast retraining """
         system(f"sh {self.program_path}/src/aws/test/train_local.sh")
 
     @warm_farewell
     def clear_all_images(self):
+        """ Clear all images from local docker """
         system(f"docker image rm -f $(docker image ls)")
     
     @warm_farewell
     def prune_docker(self):
+        """ Prune local docker system """
         p = popen(f"docker system prune", "w")
         p.write("y\n")
     
