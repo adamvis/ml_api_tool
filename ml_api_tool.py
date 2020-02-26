@@ -57,6 +57,7 @@ def click_off(attr=None):
 
 class Main:
     def __init__(self):
+        """ Get tool workdir """
         self.program_path = "/".join(__file__.split("/")[:-1])
         self.intro()
 
@@ -117,6 +118,7 @@ class Main:
         res = prompt(dm_menu, style=style)
         return res["dm"]
 
+    @warm_farewell
     def launch_image(self):
         """ Build Docker image locally from build folder (defined after intro) """
         system(f"docker image build -t {app.model_name}_image {self.build_path}")
@@ -199,7 +201,6 @@ if __name__=="__main__":
                 _test = app.test_menu()
                 if _test == "train":
                     app.train()
-                    system("sleep 10")
                     continue
                 elif _test == "serve":
                     app.serve()
