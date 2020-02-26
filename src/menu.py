@@ -135,7 +135,7 @@ dm_menu = [
         'type': 'list',
         'name': 'dm',
         'message': 'Docker Manager Menu',
-        'choices': ['Launch image', 'Clear all images', 'Prune system', '<- back'],
+        'choices': ['Launch image', 'Clear all images', 'Prune system', 'Stop Containers', '<- back'],
         'filter': lambda val: val.lower()
     }
 ]

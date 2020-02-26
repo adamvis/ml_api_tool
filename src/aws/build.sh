@@ -72,11 +72,14 @@ sed -i '' -e "s/input\/config\/hyperparameters.json/..\/program\/src\/hyperparam
 sed -i '' -e "s/tree.DecisionTreeClassifier(max_leaf_nodes=max_leaf_nodes)/Model(**trainingParams)/g" $BUILD_DIR/model/train
 sed -i '' -e "s/train_X, train_y/train_data/g" $BUILD_DIR/model/train
 sed -i '' -e "s/decision-tree-model.pkl/${MODEL_NAME}_model.pkl/g" $BUILD_DIR/model/train
+sed -i '' -e "s/, header=None//g" $BUILD_DIR/model/train
+sed -i '' -e "s/'w') as out/'wb') as out/g" $BUILD_DIR/model/train
 sed -i '' -e '51,60d' $BUILD_DIR/model/train
 
 # [REPL] - model/predictor.py
+sed -i '' -e "s/import StringIO/import io as StringIO/g" $BUILD_DIR/model/predictor.py
 sed -i '' -e "s/decision-tree-model.pkl/${MODEL_NAME}_model.pkl/g" $BUILD_DIR/model/predictor.py
-
+sed -i '' -e "s/, header=None//g" $BUILD_DIR/model/predictor.py
 echo "done"
 
 printf "Setting up testing environment.."

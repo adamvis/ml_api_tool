@@ -124,17 +124,17 @@ class Main:
         system(f"docker image build -t {app.model_name}_image {self.build_path}")
         system(f"docker container run --publish 8000:8080 --detach --name {app.model_name}_container {app.model_name}_image")
 
-    @log_error
+    @warm_farewell
     def train(self):
         """ Launch train on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/train_local.sh {app.model_name}_image {self.build_path}")
 
-    @log_error
+    @warm_farewell
     def serve(self):
         """ Launch serve on <local_image>:opt/program/ """
-        system(f"sh {self.program_path}/src/aws/test/serve_local.sh {app.model_name}_image")
+        system(f"sh {self.program_path}/src/aws/test/serve_local.sh {app.model_name}_image {self.build_path}")
 
-    @not_implemented
+    @log_error
     def inference(self):
         """ Launch predict.py on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/predict.sh")
@@ -159,6 +159,11 @@ class Main:
         """ Prune local docker system """
         p = popen(f"docker system prune", "w")
         p.write("y\n")
+
+    @warm_farewell
+    def stop_containers(self):
+        """ Stop running containers """
+        system("docker container stop $(docker container ls -q)")
     
 
 ##################################################################################
@@ -189,6 +194,9 @@ if __name__=="__main__":
                     continue
                 elif _dm == "prune system":
                     app.prune_docker()
+                    continue
+                elif _dm == "stop containers":
+                    app.stop_containers()
                     continue
                 elif _dm == "<- back":
                     break
