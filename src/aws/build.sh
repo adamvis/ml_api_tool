@@ -61,8 +61,6 @@ mv $BUILD_DIR/Dockerfile.tmp $BUILD_DIR/Dockerfile
 awk '/COPY model \/opt\/program/ { print; print "RUN chmod +x \/opt\/program\/train \/opt\/program\/serve"; next }1' $BUILD_DIR/Dockerfile > $BUILD_DIR/Dockerfile.tmp
 mv $BUILD_DIR/Dockerfile.tmp $BUILD_DIR/Dockerfile
 
-awk '/COPY model \/opt\/program/ { print; print "ADD model\/src\/train.csv \/opt\/ml\/input\/data\/training/train.csv"; next }1' $BUILD_DIR/Dockerfile > $BUILD_DIR/Dockerfile.tmp
-mv $BUILD_DIR/Dockerfile.tmp $BUILD_DIR/Dockerfile
 
 
 sed -i '' -e '23,26d' $BUILD_DIR/Dockerfile
