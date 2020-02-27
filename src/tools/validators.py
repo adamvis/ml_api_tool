@@ -48,3 +48,10 @@ class NumberValidator(Validator):
             raise ValidationError(
                 message='Please enter a number',
                 cursor_position=len(document.text))  # Move cursor to end
+
+class TagValidator(Validator):
+    def validate(self, name):
+        if not len(name.text)>0:
+            raise ValidationError(
+                message='Please enter a valid string',
+                cursor_position=len(name.text))  # Move cursor to end

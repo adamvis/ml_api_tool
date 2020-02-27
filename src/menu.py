@@ -109,6 +109,16 @@ out_path_q = [
     }
 ]
 
+tag_q = [ 
+    {
+        'type': 'input',
+        'name': 'tag',
+        'message': 'Assign tag for this image (dev, qa, prod, ..)',
+        "default" : "dev",
+        'validate': TagValidator
+    }
+]
+
 # MENU
 main_menu = [
     {   
@@ -136,6 +146,16 @@ dm_menu = [
         'name': 'dm',
         'message': 'Docker Manager Menu',
         'choices': ['Launch image', 'Clear all images', 'Prune system', 'Stop Containers', '<- back'],
+        'filter': lambda val: val.lower()
+    }
+]
+
+deploy_menu = [ 
+    {   
+        'type': 'list',
+        'name': 'deploy_usage',
+        'message': 'Docker Manager Menu',
+        'choices': ['Push to ECR', 'Training Job', 'Endpoint Deployement', '<- back'],
         'filter': lambda val: val.lower()
     }
 ]

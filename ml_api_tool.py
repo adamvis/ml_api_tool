@@ -75,6 +75,11 @@ class Main:
         res = prompt(model_name_q, style=style)
         self.model_name = res["model_name"]
 
+    def ask_tag(self):
+        """ Asks for tag for image repository"""
+        res = prompt(in_path_q, style=style)
+        return res["tag"]
+
     def ask_paths(self):
         """ 
         Asks for:
@@ -89,6 +94,7 @@ class Main:
         self.model_path = os.path.abspath(res["in_path"])
         res = prompt(out_path_q, style=style)  
         self.build_path = f"{os.path.abspath(res['out_path'])}/build_{self.model_name}"
+
 
     @click_off(attr='usage')
     def ask_usage(self):        
@@ -117,6 +123,12 @@ class Main:
         """ Docker Manager menu """
         res = prompt(dm_menu, style=style)
         return res["dm"]
+    
+    # @click_off()
+    def deploy_menu(self):
+        """ Docker Manager menu """
+        res = prompt(deploy_menu, style=style)
+        return res["deploy_usage"]
 
     @warm_farewell
     def launch_image(self):
@@ -139,10 +151,10 @@ class Main:
         """ Launch predict.py on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/predict.sh")
     
-    @not_implemented
-    def deploy(self):
-        """ T.B.D. will allow cloud deploying """
-        system(f"sh {self.program_path}/src/aws/test/train_local.sh")
+    @log_error
+    def push_to_ecr(self, tag):
+        """ Push image to ECR """
+        system(f"sh {self.program_path}/src/aws/push.sh -b {self.build_dir} -n {self.model_name} -t {tag}")
 
     @not_implemented
     def mantain(self):
@@ -219,8 +231,21 @@ if __name__=="__main__":
                 elif _test == "<- back":
                     break
         if app.usage == "deploy":
-            app.deploy()
-            continue
+            while True:
+                system("clear")
+                app.intro()
+                _depl = app.deploy_menu()
+                if _depl == 'push to ecr':
+                    _tag = ask_tag()
+                    app.push_to_ecr(_tag)
+                    continue
+                if _depl == 'training job':
+                    continue
+                if _depl == 'endpoint deployement':
+                    continue
+                if _depl == '<- back':
+                    break
+                
         if app.usage == "mantain":
             app.mantain()
             continue

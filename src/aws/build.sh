@@ -21,9 +21,14 @@ cp -r $MODEL_DIR $BUILD_DIR/model/src > logs.txt
 touch $BUILD_DIR/model/__init__.py
 rm logs.txt
 
-# [REPL] - buil_and_push.sh
+# [REPL] - build_and_push.sh
 sed -i '' -e "s/decision_trees/model/g" $BUILD_DIR/build_and_push.sh
 sed -i '' -e "s/us-west-2/us-east-1/g" $BUILD_DIR/build_and_push.sh
+sed -i '' -e "s/latest/\${tag}/g" $BUILD_DIR/build_and_push.sh
+
+## [ADD-UNDER] build_and_push
+awk '/image=\$1/ { print; print "tag=\$2"; next }1' $BUILD_DIR/build_and_push.sh > $BUILD_DIR/build_and_push.tmp
+mv $BUILD_DIR/build_and_push.tmp $BUILD_DIR/build_and_push.sh
 
 # [REPL] - Dockerfile
 sed -i '' -e "s/ubuntu:16.04/python:3.6/g" $BUILD_DIR/Dockerfile
