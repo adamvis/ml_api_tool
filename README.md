@@ -42,11 +42,13 @@ we start it typing on terminal:
 
 Then we will be prompted to the path menu, where asked about the directory where the model has been stored and tested locally, the path where we want to place the generated deployment directory and the model name.
 
-FIGURE
+In this case i will name my model myb, which is contained in a folder named src (if using example you should write the path to where you located the example folder) and i want to place the deployment folder just outside of where i'm at.
+
+![](./pics/img1.png)
 
 After setting the use case environment we will be directed to the main menu:
 
-FIGURE
+![](./pics/img1.png)
 
 The menu is explained below but if you just want to try it, then follow the steps on bracket lines [].
 
