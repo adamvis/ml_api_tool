@@ -146,6 +146,15 @@ class Main:
     def train(self):
         """ Launch train on <local_image>:opt/program/ """
         system(f"sh {self.program_path}/src/aws/test/train_local.sh {app.model_name}_image {self.build_path}")
+   
+    @not_implemented
+    def training_job_menu(self):
+        pass
+    
+    @not_implemented
+    def endpoint_deployement_menu(self):
+        pass
+
 
     @warm_farewell
     def serve(self):
@@ -157,8 +166,8 @@ class Main:
         """ Launch predict.py on <local_image>:opt/program/ with external payload"""
         payload = io.StringIO()
         pd.read_csv(path_to_data).to_csv(payload, index=None)
-        system(f"sh {self.program_path}/src/aws/test/predict.sh {payload.getvalue()}")
-        system(f"docker logs {self.model_name}_inference >> {self.build_path}/local_test/test_dir/output/logs.txt")
+        system(f"sh {self.program_path}/src/aws/test/predict.sh {path_to_data} {self.build_path}/local_test/test_dir/output/output.txt")
+        system(f"docker logs {self.model_name}_inference &> {self.build_path}/local_test/test_dir/output/logs.txt")
 
     
     @log_error
@@ -250,16 +259,17 @@ if __name__=="__main__":
                     app.push_to_ecr(_tag)
                     continue
                 if _depl == 'training job':
+                    app.training_job_menu()
                     continue
                 if _depl == 'endpoint deployement':
+                    app.endpoint_deployement_menu()
                     continue
                 if _depl == '<- back':
-                    break
-                
+                    break                
         if app.usage == "mantain":
             app.mantain()
             continue
         if app.usage == "exit":
-            break
+            break     
         if app.usage == None:
             continue

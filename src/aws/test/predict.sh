@@ -1,6 +1,7 @@
 #!/bin/bash
 
 payload=$1
-content=${2:-text/csv}
+output_file=$2
+content=${3:-text/csv}
 
-curl --data-binary @${payload} -H "Content-Type: ${content}" -v http://localhost:8080/invocations
+curl --data-binary @${payload} -H "Content-Type: ${content}" -v http://localhost:8080/invocations &> ${output_file}
