@@ -9,75 +9,6 @@ style = style_from_dict({
     Token.Question: '',
 })
 
-questions = [
-    {
-        'type': 'confirm',
-        'name': 'toBeDelivered',
-        'message': 'Is this for delivery?',
-        'default': False
-    },
-    {
-        'type': 'input',
-        'name': 'phone',
-        'message': 'What\'s your phone number?',
-        'validate': PhoneNumberValidator
-    },
-    {
-        'type': 'list',
-        'name': 'size',
-        'message': 'What size do you need?',
-        'choices': ['Large', 'Medium', 'Small'],
-        'filter': lambda val: val.lower()
-    },
-    {
-        'type': 'input',
-        'name': 'quantity',
-        'message': 'How many do you need?',
-        'validate': NumberValidator,
-        'filter': lambda val: int(val)
-    },
-    {
-        'type': 'expand',
-        'name': 'toppings',
-        'message': 'What about the toppings?',
-        'choices': [
-            {
-                'key': 'p',
-                'name': 'Pepperoni and cheese',
-                'value': 'PepperoniCheese'
-            },
-            {
-                'key': 'a',
-                'name': 'All dressed',
-                'value': 'alldressed'
-            },
-            {
-                'key': 'w',
-                'name': 'Hawaiian',
-                'value': 'hawaiian'
-            }
-        ]
-    },
-    {
-        'type': 'rawlist',
-        'name': 'beverage',
-        'message': 'You also get a free 2L beverage',
-        'choices': ['Pepsi', '7up', 'Coke']
-    },
-    {
-        'type': 'input',
-        'name': 'comments',
-        'message': 'Any comments on your purchase experience?',
-        'default': 'Nope, all good!'
-    },
-    {
-        'type': 'list',
-        'name': 'prize',
-        'message': 'For leaving a comment, you get a freebie',
-        'choices': ['cake', 'fries'],
-        'when': lambda answers: answers['comments'] != 'Nope, all good!'
-    }
-]
 
 model_name_q = [ 
     {
@@ -125,7 +56,7 @@ pay_path_q = [
         'name': 'payload_path',
         'message': 'Path to payload for testing inference',
         "default" : f"{os.getcwd()}",
-        'validate': DeployPathValidator
+        'validate': PayloadPathValidator
     }
 ]
 

@@ -25,6 +25,14 @@ class ModelPathValidator(Validator):
                 message='Please enter a valid model path (model must be in __init__.py)',
                 cursor_position=len(path.text))  # Move cursor to end
 
+class PayloadPathValidator(Validator):
+    def validate(self, path):
+        ok = os.path.exists(path.text) & (path.text[-3:] in ["csv", "tsv"])
+        if (not ok) | (sum(check_navigator(path.text).values()) > 0):
+            raise ValidationError(
+                message='Please enter a valid payload path (file must be csv or tsv)',
+                cursor_position=len(path.text))  # Move cursor to end
+
 class DeployPathValidator(Validator):
     def validate(self, path):
         ok = os.path.exists(path.text)
