@@ -48,7 +48,7 @@ In this case i will name my model myb, which is contained in a folder named src 
 
 After setting the use case environment we will be directed to the main menu:
 
-![](./pics/img1.png)
+![](./pics/img2.png)
 
 The menu is explained below but if you just want to try it, then follow the steps on bracket lines [].
 
