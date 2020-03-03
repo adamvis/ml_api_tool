@@ -119,6 +119,16 @@ tag_q = [
     }
 ]
 
+pay_path_q = [ 
+    {
+        'type': 'input',
+        'name': 'payload_path',
+        'message': 'Path to payload for testing inference',
+        "default" : f"{os.getcwd()}",
+        'validate': DeployPathValidator
+    }
+]
+
 # MENU
 main_menu = [
     {   

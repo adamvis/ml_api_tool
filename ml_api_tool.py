@@ -3,6 +3,9 @@ from __future__ import print_function, unicode_literals
 from os import system, popen
 from pyfiglet import Figlet
 from PyInquirer import prompt
+import pandas as pd
+
+import io
 
 from src.menu import *
 
@@ -10,30 +13,30 @@ from src.menu import *
 ##################################################################################
 # Wrappers
 
-def not_implemented(func, *args, **kwargs):
+def not_implemented(func):
     """ Print not implemente image instead of running the function. """
-    def func_wrapper(obj):
+    def func_wrapper(obj, *args, **kwargs):
         print(" ------------------------------")
         print("| Feature not implemented yet! |")
         print(" ------------------------------")
         system("sleep 1")
     return func_wrapper
 
-def log_error(func, *args, **kwargs):
+def log_error(func):
     """ Exit program as error appears, allowing to exit main loop and see tracebacks. """
-    def func_wrapper(obj):
+    def func_wrapper(obj, *args, **kwargs):
         try:
-            func(obj)
+            func(obj, *args)
             exit()
         except Exception as e:
             print(e)
             exit()
     return func_wrapper
 
-def warm_farewell(func, *args, **kwargs):
+def warm_farewell(func):
     """ State if command has been executed correctly """
-    def func_wrapper(obj):
-        func(obj)
+    def func_wrapper(obj, *args, **kwargs):
+        func(obj, *args, **kwargs)
         print(f"{func.__name__} executed correctly!")
         system("sleep 3")
     return func_wrapper
@@ -95,6 +98,9 @@ class Main:
         res = prompt(out_path_q, style=style)  
         self.build_path = f"{os.path.abspath(res['out_path'])}/build_{self.model_name}"
 
+    def ask_payload(self):
+        res = prompt(pay_path_q, style=style)
+        return os.path.abspath(res["payload_path"])
 
     @click_off(attr='usage')
     def ask_usage(self):        
@@ -144,12 +150,16 @@ class Main:
     @warm_farewell
     def serve(self):
         """ Launch serve on <local_image>:opt/program/ """
-        system(f"sh {self.program_path}/src/aws/test/serve_local.sh {app.model_name}_image {self.build_path}")
+        system(f"sh {self.program_path}/src/aws/test/serve_local.sh {app.model_name}_image {self.build_path} {self.model_name}_inference")
 
-    @log_error
-    def inference(self):
-        """ Launch predict.py on <local_image>:opt/program/ """
-        system(f"sh {self.program_path}/src/aws/test/predict.sh")
+    @warm_farewell
+    def inference(self, path_to_data):
+        """ Launch predict.py on <local_image>:opt/program/ with external payload"""
+        payload = io.StringIO()
+        pd.read_csv(path_to_data).to_csv(payload, index=None)
+        system(f"sh {self.program_path}/src/aws/test/predict.sh {payload.getvalue()}")
+        system(f"docker logs {self.model_name}_inference >> {self.build_path}/local_test/test_dir/output/logs.txt")
+
     
     @log_error
     def push_to_ecr(self, tag):
@@ -177,7 +187,6 @@ class Main:
         """ Stop running containers """
         system("docker container stop $(docker container ls -q)")
     
-
 ##################################################################################
 # Flow
 
@@ -226,7 +235,8 @@ if __name__=="__main__":
                     app.serve()
                     continue
                 elif _test == "inference":
-                    app.inference()
+                    payload_path = app.ask_payload()
+                    app.inference(payload_path)
                     continue
                 elif _test == "<- back":
                     break
