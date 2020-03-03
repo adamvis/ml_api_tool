@@ -71,8 +71,8 @@ The menu is explained below but if you just want to try it, then follow the step
 	 - _Inference_[5]:
 		 This test simulates the endpoint inference process. It will ask for the path to a sample csv dataframe.
  - __Deploy__
-	 - _Push on ECR_
-		 il running this on Sagemaker console, allows to push the tested deployment folder to ECR, providing also a tag name for the image.
+	 - _Push on ECR_:
+		 if running this on Sagemaker console, allows to push the tested deployment folder to ECR, providing also a tag name for the image.
 	 - _Launch Training Job_ (to be implemented):
 		 Through external config file.
 	 - _Deploy Endpoint_(to be implemented):
