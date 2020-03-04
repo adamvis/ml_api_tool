@@ -52,30 +52,31 @@ After setting the use case environment we will be directed to the main menu:
 
 The menu is explained below but if you just want to try it, then follow the steps on bracket lines [].
 
- - __Build the model__ [1]
+ - __Build the model__ [1]\
 	 This will trigger the scaffolding procedure that wraps our code in flask api, sets the load balancer and the dockerfile. Under the hood it is accomplished by downloading a sample structure from [aws labs github page](https://github.com/awslabs/amazon-sagemaker-examples/tree/master/advanced_functionality/scikit_bring_your_own/container) and adapting it to our model.
  - __Docker Manager__
-	 - _Launch image_ [2]
+	 - _Launch image_ [2]\
 		 Launch the image locally from the deployment folder. The first launch might take a while because all dependencies are being installed but all further changes in the code will be pushed in seconds if there's already an existing image.
-	 - _Clean images_
+	 - _Clean images_\
 		 Tool to clean all images from local docker. It should never be used if you have other important docker demons running on your local.
-	 - _Prune system_:
+	 - _Prune system_\
 		 Deletes all containers that are not running or does not have an image any more.
-	 - _Stop containers
+	 - _Stop containers\
 		 Stops all running containers.
  - __Test__
-	 - _Train_ [3]:
-		 This test simulate Sagemaker training jobs on a local image and using the train.csv sample dataset provided within the original model folder.
-	 - _Serve_ [4]:
-		 Is necessary to be launched after training to allow inference queries.
-	 - _Inference_[5]:
-		 This test simulates the endpoint inference process. It will ask for the path to a sample csv dataframe.
+	During testing, \<build_dir\>/local_test/test_dir is mounted as a volumne to the docker container so we can have look at the outputs on the processes.
+	 - _Train_ [3]\
+		 This test simulate Sagemaker training jobs on a local image and using the train.csv sample dataset provided within the original model folder. If completed correctly than a model file should be present in \<build_dir\>/local_test/test_dir/model.
+	 - _Serve_ [4]\
+		 Is necessary to be launched before inference to be active on invocations.
+	 - _Inference_[5]\
+		 This test simulates the endpoint inference process. It will ask for the path to a sample csv dataframe. The output and logs of these process will be found in \<build_dir\>/local_test/test_dir/output.
  - __Deploy__
-	 - _Push on ECR_:
+	 - _Push on ECR_\
 		 if running this on Sagemaker console, allows to push the tested deployment folder to ECR, providing also a tag name for the image.
-	 - _Launch Training Job_ (to be implemented):
+	 - _Launch Training Job_ (to be implemented)\
 		 Through external config file.
-	 - _Deploy Endpoint_(to be implemented):
+	 - _Deploy Endpoint_ (to be implemented)\
 		 Build endpoint from successful training job and through external config file.
  - __Mantain__ (to be implemented)
 	 - Does Metrics evaluation on running endpoints.
