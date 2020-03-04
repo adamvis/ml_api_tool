@@ -6,4 +6,4 @@ ml_api_tool.egg-info
 build
 dist
 .metals
-.pyc
+*.pyc
