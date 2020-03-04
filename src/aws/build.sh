@@ -85,6 +85,8 @@ sed -i '' -e '51,60d' $BUILD_DIR/model/train
 sed -i '' -e "s/import StringIO/import io as StringIO/g" $BUILD_DIR/model/predictor.py
 sed -i '' -e "s/decision-tree-model.pkl/${MODEL_NAME}_model.pkl/g" $BUILD_DIR/model/predictor.py
 sed -i '' -e "s/, header=None//g" $BUILD_DIR/model/predictor.py
+sed -i '' -e "s/'r') as inp/'rb') as inp/g" $BUILD_DIR/model/predictor.py
+sed -i '' -e "s/'results':predictions/'results':[predictions]/g" $BUILD_DIR/model/predictor.py
 echo "done"
 
 printf "Setting up testing environment.."

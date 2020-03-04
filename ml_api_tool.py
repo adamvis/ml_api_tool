@@ -140,12 +140,12 @@ class Main:
     def launch_image(self):
         """ Build Docker image locally from build folder (defined after intro) """
         system(f"docker image build -t {app.model_name}_image {self.build_path}")
-        system(f"docker container run --publish 8000:8080 --detach --name {app.model_name}_container {app.model_name}_image")
+        # system(f"docker container run --publish 8000:8080 --detach --name {app.model_name}_container {app.model_name}_image")
 
     @warm_farewell
     def train(self):
         """ Launch train on <local_image>:opt/program/ """
-        system(f"sh {self.program_path}/src/aws/test/train_local.sh {app.model_name}_image {self.build_path}")
+        system(f"sh {self.program_path}/src/aws/test/train_local.sh {app.model_name}_image {self.build_path} {app.model_name}_training_job")
    
     @not_implemented
     def training_job_menu(self):
@@ -154,7 +154,6 @@ class Main:
     @not_implemented
     def endpoint_deployement_menu(self):
         pass
-
 
     @warm_farewell
     def serve(self):
@@ -167,7 +166,7 @@ class Main:
         payload = io.StringIO()
         pd.read_csv(path_to_data).to_csv(payload, index=None)
         system(f"sh {self.program_path}/src/aws/test/predict.sh {path_to_data} {self.build_path}/local_test/test_dir/output/output.txt")
-        system(f"docker logs {self.model_name}_inference &> {self.build_path}/local_test/test_dir/output/logs.txt")
+        system(f"docker logs {self.model_name}_inference &> {self.build_path}/local_test/test_dir/output/inference_logs.txt")
 
     
     @log_error
