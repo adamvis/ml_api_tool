@@ -6,6 +6,7 @@ Simple Tool to wrap models into ml API, test them locally and deploying on AWS a
 
  - Python 3.6 or higher
  - Docker
+ - AWS cli (to allow functionalities in deployement menu)
 
 ## Setup
 
@@ -19,7 +20,9 @@ This will launch requirements installation and aliasing python3 ml_api_tool as  
 
 ## Example
 
-The example folder (ore in future, the folder containing the model we are trying to deploy) has a minimal required structure for the tool to work:
+To test it, we provide an ![example folder](https://drive.google.com/drive/folders/130dAuzILfEG2eoJ0SuTOmWbIOnsQ1Wkw?usp=sharing), feel free to download it to go through this tutorial.
+
+The example folder (or in future, the folder containing the model we are trying to deploy) has a minimal required structure for the tool to work:
 
  - \_\_init__.py__
 	 Containing the model object named as "Model" that accepts a **kwargs dictionary to set its internal behaviour.
@@ -32,7 +35,7 @@ The example folder (ore in future, the folder containing the model we are trying
 	Sample dataset to test training
 - Any other file require d for the model to work
 
-To test it, supposing we placed it in the desktop:
+Supposing we placed it in the desktop:
 
 	/Users/adam/Desktop/example
 
@@ -64,13 +67,14 @@ The menu is explained below but if you just want to try it, then follow the step
 	 - _Stop containers\
 		 Stops all running containers.
  - __Test__
-	During testing, \<build_dir\>/local_test/test_dir is mounted as a volumne to the docker container so we can have look at the outputs on the processes.
+	During testing, _\<build_dir\>/local_test/test_dir_ is mounted as a volumne to the docker container so we can have look at the outputs on the processes.
 	 - _Train_ [3]\
-		 This test simulate Sagemaker training jobs on a local image and using the train.csv sample dataset provided within the original model folder. If completed correctly than a model file should be present in \<build_dir\>/local_test/test_dir/model.
+		 This test simulate Sagemaker training jobs on a local image and using the train.csv sample dataset provided within the original model folder. If completed correctly than a model file should be present in _\<build_dir\>/local_test/test_dir_
+		 model.
 	 - _Serve_ [4]\
 		 Is necessary to be launched before inference to be active on invocations.
 	 - _Inference_[5]\
-		 This test simulates the endpoint inference process. It will ask for the path to a sample csv dataframe. The output and logs of these process will be found in \<build_dir\>/local_test/test_dir/output.
+		 This test simulates the endpoint inference process. It will ask for the path to a sample csv dataframe. The output and logs of these process will be found in _\<build_dir\>/local_test/test_dir/output_.
  - __Deploy__
 	 - _Push on ECR_\
 		 if running this on Sagemaker console, allows to push the tested deployment folder to ECR, providing also a tag name for the image.
