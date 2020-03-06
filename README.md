@@ -20,7 +20,7 @@ This will launch requirements installation and aliasing python3 ml_api_tool as  
 
 ## Example
 
-To test it, we provide an ![example folder](https://drive.google.com/drive/folders/130dAuzILfEG2eoJ0SuTOmWbIOnsQ1Wkw?usp=sharing), feel free to download it to go through this tutorial.
+To test it, we provide an [example folder](https://drive.google.com/drive/folders/130dAuzILfEG2eoJ0SuTOmWbIOnsQ1Wkw?usp=sharing), feel free to download it to go through this tutorial.
 
 The example folder (or in future, the folder containing the model we are trying to deploy) has a minimal required structure for the tool to work:
 
