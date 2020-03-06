@@ -15,7 +15,7 @@ model_name_q = [
         'type': 'input',
         'name': 'model_name',
         'message': 'Define a model name',
-        'default' : 'myb',
+        'default' : 'example',
         'validate': DummyValidator
     }
 ]

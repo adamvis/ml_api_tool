@@ -18,6 +18,7 @@ printf "Copying your model inside it.."
 # Rename and fill model directory
 mv $BUILD_DIR/decision_trees $BUILD_DIR/model > logs.txt
 cp -r $MODEL_DIR $BUILD_DIR/model/src > logs.txt
+rm $BUILD_DIR/model/src/train.csv
 touch $BUILD_DIR/model/__init__.py
 rm logs.txt
 
@@ -75,6 +76,7 @@ sed -i '' -e '12d' $BUILD_DIR/Dockerfile
 sed -i '' -e "s/from sklearn import tree/from src import Model/g" $BUILD_DIR/model/train
 sed -i '' -e "s/input\/config\/hyperparameters.json/..\/program\/src\/hyperparameters.json/g" $BUILD_DIR/model/train
 sed -i '' -e "s/tree.DecisionTreeClassifier(max_leaf_nodes=max_leaf_nodes)/Model(**trainingParams)/g" $BUILD_DIR/model/train
+sed -i '' -e "s/clf = clf.fit(train_data)/clf.fit(train_data)/g" $BUILD_DIR/model/train
 sed -i '' -e "s/train_X, train_y/train_data/g" $BUILD_DIR/model/train
 sed -i '' -e "s/decision-tree-model.pkl/${MODEL_NAME}_model.pkl/g" $BUILD_DIR/model/train
 sed -i '' -e "s/, header=None//g" $BUILD_DIR/model/train
@@ -96,3 +98,4 @@ rm $BUILD_DIR/local_test/test_dir/input/data/training/iris.csv
 cp ${MODEL_DIR}/hyperparameters.json $BUILD_DIR/local_test/test_dir/input/config/
 cp ${MODEL_DIR}/train.csv $BUILD_DIR/local_test/test_dir/input/data/training/
 echo "done"
+
